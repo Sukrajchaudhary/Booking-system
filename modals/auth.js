@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const userSchema = new Schema({
   username:{type:String,require:true},
-  password: { type: Buffer, required: true },
+  password: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   PhoneNo: {
     type: [Schema.Types.Mixed],
