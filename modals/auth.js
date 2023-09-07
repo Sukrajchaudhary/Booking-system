@@ -1,13 +1,28 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const userSchema = new Schema({
-  username:{type:String,require:true},
-  password: { type: String, required: true },
+  username: {
+    type: String,
+    require: true,
+  },
+  password: {
+    type: Buffer,
+    required: true,
+  },
   email: { type: String, required: true, unique: true },
   PhoneNo: {
     type: [Schema.Types.Mixed],
-    default:null
-    },
+    default: null,
+  },
+  salt: {
+    type: Buffer,
+  },
+  role:{
+    type:String
+  },
+  token:{
+    type:Buffer
+  }
 });
 const virtual = userSchema.virtual("id");
 virtual.get(function () {
