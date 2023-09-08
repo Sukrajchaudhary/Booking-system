@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const server = express();
+const  cookieParser = require('cookie-parser')
 const { connectToDb } = require("./db");
 const passport = require("passport");
 const session = require("express-session");
@@ -14,14 +15,14 @@ const bookingRouter = require("./routes/booking");
 const getUserBookingRouter= require("./routes/getuserBookings")
 const crypto = require("crypto");
 const { User } = require("./modals/auth");
-const { isAuth, sanitizer } = require("./services/common");
+const { isAuth, sanitizer,cookieExtractor } = require("./services/common");
 
 const jwt = require("jsonwebtoken");
 const secret = process.env.SECRET_KEY;
 // Middlewares
 
 const opts = {};
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+opts.jwtFromRequest = cookieExtractor;
 opts.secretOrKey = process.env.SECRET_KEY;
 
 server.use(
@@ -32,6 +33,7 @@ server.use(
   })
 );
 server.use(express.json());
+server.use(cookieParser());
 server.use(passport.initialize());
 server.use(passport.session());
 
@@ -72,7 +74,7 @@ passport.use(
             });
           }
           const token = jwt.sign(sanitizer(user), secret);
-          return done(null, token);
+          return done(null, {token});
         }
       );
       

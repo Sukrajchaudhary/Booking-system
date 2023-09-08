@@ -2,7 +2,7 @@ const { User } = require("../modals/auth");
 const crypto = require("crypto");
 const { sanitizer } = require("../services/common");
 const jwt = require("jsonwebtoken");
-const SECRET_KEY=process.env.SECRET_KEY
+const SECRET_KEY = process.env.SECRET_KEY;
 exports.createUsers = async (req, res) => {
   try {
     const salt = crypto.randomBytes(16);
@@ -24,8 +24,13 @@ exports.createUsers = async (req, res) => {
           if (err) {
             return res.status(400).json(err);
           } else {
-            const token=jwt.sign(sanitizer(response),SECRET_KEY)
-            return res.status(201).json({token});
+            const token = jwt.sign(sanitizer(response), SECRET_KEY);
+            res.cookie("jwt", token, {
+                expires: new Date(Date.now() + 3600000),
+                httpOnly: true,
+              })
+              .status(201)
+              .json(token);
           }
         });
       }
@@ -36,8 +41,13 @@ exports.createUsers = async (req, res) => {
 };
 
 exports.loginUser = async (req, res) => {
-  res.json(req.user);
+  res.cookie("jwt", req.user.token, {
+    expires: new Date(Date.now() + 3600000),
+    httpOnly: true,
+  })
+  .status(201)
+  .json(req.user.token);
 };
 exports.checkUser = async (req, res) => {
-  res.json({message:"success",user:req.user});
+  res.json({ message: "success", user: req.user });
 };

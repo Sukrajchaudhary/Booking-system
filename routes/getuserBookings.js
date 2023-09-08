@@ -7,7 +7,7 @@ const {
 const router = express.Router();
 router
   
-  .patch("/update/:id", updateuserBookingByid)
+  .patch("/update", updateuserBookingByid)
   .get("/allbooking", getalluserBooking);
 
 exports.router = router;

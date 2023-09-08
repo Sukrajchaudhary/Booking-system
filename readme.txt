@@ -35,7 +35,7 @@
 1.http://localhost:8080/allbooking?_page=1&_limit=5  
 =>These API is used by Admi For Getting All users Booking In admin pannel
 Note:it also Need a Barre Token
-2.http://localhost:8080/update/user_Booking id
+2.http://localhost:8080/update
 => These Api is used for updaing user booking status 
 Note:it also need a Barrer Token and it takes a parameters  like these
 {

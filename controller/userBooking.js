@@ -1,9 +1,9 @@
 const { userBooking } = require("../modals/userBooking");
-exports.userBooking= async (req, res) => {
+exports.userBooking = async (req, res) => {
   try {
-    const {id}=req.user
-    console.log(id)
-    const booking = new userBooking({...req.body,user:id});
+    const { id } = req.user;
+    console.log(id);
+    const booking = new userBooking({ ...req.body, user: id });
     const result = await booking.save();
     return res.status(201).send(result);
   } catch (error) {
@@ -13,11 +13,12 @@ exports.userBooking= async (req, res) => {
 exports.getalluserBooking = async (req, res) => {
   try {
     let booking = await userBooking.find();
-    let totaluserbooking= await userBooking.countDocuments();
-    if(req.query._page && req.query._limit){
+    let totaluserbooking = await userBooking.countDocuments();
+    if (req.query._page && req.query._limit) {
       const pageSize = parseInt(req.query._limit, 10);
       const page = parseInt(req.query._page, 10);
-      booking = await userBooking.find()
+      booking = await userBooking
+        .find()
         .skip(pageSize * (page - 1))
         .limit(pageSize);
     }
@@ -28,11 +29,13 @@ exports.getalluserBooking = async (req, res) => {
   }
 };
 
-
 exports.getuserBookingByid = async (req, res) => {
   try {
     const { id } = req.user;
-    const booking = await userBooking.findOne({ user: id }).populate('user',"PhoneNo username").exec();
+    const booking = await userBooking
+      .findOne({ user: id })
+      .populate("user", "PhoneNo username")
+      .exec();
     if (!booking) {
       return res.status(404).send("Booking not found");
     }
@@ -43,8 +46,10 @@ exports.getuserBookingByid = async (req, res) => {
 };
 exports.updateuserBookingByid = async (req, res) => {
   try {
-    const { id } = req.params;
-    const booking = await userBooking.findByIdAndUpdate(id, req.body, { new: true });
+    const { id } = req.user;
+    const booking = await userBooking.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
     return res.status(201).json(booking);
   } catch (error) {
     return res.status(400).send(error.message);
