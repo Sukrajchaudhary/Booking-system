@@ -11,6 +11,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const userBooking = require("./routes/userBooking");
 const userRouter = require("./routes/user");
 const bookingRouter = require("./routes/booking");
+const getUserBookingRouter= require("./routes/getuserBookings")
 const crypto = require("crypto");
 const { User } = require("./modals/auth");
 const { isAuth, sanitizer } = require("./services/common");
@@ -36,9 +37,10 @@ server.use(passport.session());
 
 // Routes
 server.use("/", authRouter.router);
-server.use("/", isAuth(),bookingRouter.router);
-server.use("/", userBooking.router);
+server.use("/",bookingRouter.router);
+server.use("/", isAuth(), userBooking.router);
 server.use("/", userRouter.router);
+server.use("/",getUserBookingRouter.router)
 
 // Passport
 passport.use(

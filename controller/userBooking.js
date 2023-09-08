@@ -1,7 +1,9 @@
 const { userBooking } = require("../modals/userBooking");
 exports.userBooking= async (req, res) => {
   try {
-    const booking = new userBooking(req.body);
+    const {id}=req.user
+    console.log(id)
+    const booking = new userBooking({...req.body,user:id});
     const result = await booking.save();
     return res.status(201).send(result);
   } catch (error) {
@@ -29,7 +31,7 @@ exports.getalluserBooking = async (req, res) => {
 
 exports.getuserBookingByid = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.user;
     const booking = await userBooking.findOne({ user: id }).populate('user',"PhoneNo username").exec();
     if (!booking) {
       return res.status(404).send("Booking not found");
