@@ -5,14 +5,14 @@
 { 
   "username":"Sukraj Chaudhary",
   "email": "bijay90@gmail.com",
-  "password": "Password@123"
+  "password": ""
 
 }
 3.http://localhost:8080/login
 => these API is used for login and it takes following parameters 
 { 
   "email": "bijay90@gmail.com",
-  "password": "Password@123"
+  "password": ""
 
 }
 4.GET method :http://localhost:8080/checkuser
