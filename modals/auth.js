@@ -18,7 +18,8 @@ const userSchema = new Schema({
     type: Buffer,
   },
   role:{
-    type:String
+    type:String,
+    default:"user"
   },
   token:{
     type:Buffer

@@ -15,7 +15,6 @@ exports.createUsers = async (req, res) => {
       async function (err, hashedPassword) {
         const user = new User({
           ...req.body,
-          role: "user",
           password: hashedPassword,
           salt: salt,
         });
