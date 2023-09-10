@@ -2,8 +2,6 @@ const express = require("express");
 const {
   userBooking,
   getuserBookingByid,
-  updateuserBookingByid,
-  getalluserBooking,
 } = require("../controller/userBooking");
 const router = express.Router();
 router

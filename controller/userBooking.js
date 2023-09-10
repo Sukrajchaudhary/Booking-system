@@ -18,7 +18,7 @@ exports.getalluserBooking = async (req, res) => {
       const pageSize = parseInt(req.query._limit, 10);
       const page = parseInt(req.query._page, 10);
       booking = await userBooking
-        .find()
+        .find()  .populate("user", "PhoneNo username")
         .skip(pageSize * (page - 1))
         .limit(pageSize);
     }
@@ -47,9 +47,10 @@ exports.getuserBookingByid = async (req, res) => {
 exports.updateuserBookingByid = async (req, res) => {
   try {
     const { id } = req.user;
-    const booking = await userBooking.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
+    console.log("user id",id)
+    const booking = await userBooking.findOne({user:id});
+    booking.status=req.body.status;
+    booking.save()
     return res.status(201).json(booking);
   } catch (error) {
     return res.status(400).send(error.message);
