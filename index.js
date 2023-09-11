@@ -75,7 +75,7 @@ passport.use(
             });
           }
           const token = jwt.sign(sanitizer(user), secret);
-          return done(null, sanitizer(token));
+          return done(null, {token});
         }
       );
     } catch (error) {
