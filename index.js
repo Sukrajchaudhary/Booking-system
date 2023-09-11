@@ -1,7 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const server = express();
-const  cookieParser = require('cookie-parser')
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const { connectToDb } = require("./db");
 const passport = require("passport");
 const session = require("express-session");
@@ -12,10 +13,10 @@ const LocalStrategy = require("passport-local").Strategy;
 const userBooking = require("./routes/userBooking");
 const userRouter = require("./routes/user");
 const bookingRouter = require("./routes/booking");
-const getUserBookingRouter= require("./routes/getuserBookings")
+const getUserBookingRouter = require("./routes/getuserBookings");
 const crypto = require("crypto");
 const { User } = require("./modals/auth");
-const { isAuth, sanitizer,cookieExtractor } = require("./services/common");
+const { isAuth, sanitizer, cookieExtractor } = require("./services/common");
 
 const jwt = require("jsonwebtoken");
 const secret = process.env.SECRET_KEY;
@@ -32,6 +33,7 @@ server.use(
     saveUninitialized: true,
   })
 );
+server.use(cors());
 server.use(express.json());
 server.use(cookieParser());
 server.use(passport.initialize());
@@ -39,10 +41,10 @@ server.use(passport.session());
 
 // Routes
 server.use("/", authRouter.router);
-server.use("/",bookingRouter.router);
+server.use("/", bookingRouter.router);
 server.use("/", isAuth(), userBooking.router);
 server.use("/", userRouter.router);
-server.use("/",getUserBookingRouter.router)
+server.use("/", getUserBookingRouter.router);
 
 // Passport
 passport.use(
@@ -55,9 +57,8 @@ passport.use(
     try {
       const user = await User.findOne({ email: email }).exec();
       if (!user) {
-        done(null, false, { message: "Sorry, this email doesn't exist!" });
+        return done(null, false, { message: "Sorry, this email doesn't exist!" });
       }
-
       crypto.pbkdf2(
         password,
         user.salt,
@@ -74,21 +75,21 @@ passport.use(
             });
           }
           const token = jwt.sign(sanitizer(user), secret);
-          return done(null, {token});
+          return done(null, sanitizer(token));
         }
       );
-      
     } catch (error) {
-      done(error);
+      return done(error);
     }
   })
 );
+
 
 passport.use(
   "jwt",
   new JwtStrategy(opts, async function (jwt_payload, done) {
     try {
-      const user = await User.findOne({_id:jwt_payload.id});
+      const user = await User.findOne({ _id: jwt_payload.id });
       if (user) {
         return done(null, sanitizer(user));
       } else {
