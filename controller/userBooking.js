@@ -12,22 +12,32 @@ exports.userBooking = async (req, res) => {
 };
 exports.getalluserBooking = async (req, res) => {
   try {
-    let booking = await userBooking.find();
-    let totaluserbooking = await userBooking.countDocuments();
+    let booking;
+    let totaluserbooking;
+
     if (req.query._page && req.query._limit) {
       const pageSize = parseInt(req.query._limit, 10);
       const page = parseInt(req.query._page, 10);
+
       booking = await userBooking
-        .find()  .populate("user", "PhoneNo username")
+        .find()
         .skip(pageSize * (page - 1))
-        .limit(pageSize);
+        .limit(pageSize)
+        .populate("user", "PhoneNo username"); 
+
+      totaluserbooking = await userBooking.countDocuments();
+    } else {
+      booking = await userBooking.find().populate("user", "PhoneNo username"); 
+      totaluserbooking = booking.length; 
     }
+
     res.set("X-TOTAL-Count", totaluserbooking);
     return res.status(200).json(booking);
   } catch (error) {
     return res.status(400).send(error.message);
   }
 };
+
 
 exports.getuserBookingByid = async (req, res) => {
   try {
@@ -44,13 +54,10 @@ exports.getuserBookingByid = async (req, res) => {
     return res.status(400).send(error.message);
   }
 };
-exports.updateuserBookingByid = async (req, res) => {
+exports.updateUserBookingById = async (req, res) => {
   try {
-    const { id } = req.user;
-    console.log("user id",id)
-    const booking = await userBooking.findOne({user:id});
-    booking.status=req.body.status;
-    booking.save()
+    const {id}= req.params;
+    const booking = await userBooking.findByIdAndUpdate(id, req.body, { new: true });
     return res.status(201).json(booking);
   } catch (error) {
     return res.status(400).send(error.message);

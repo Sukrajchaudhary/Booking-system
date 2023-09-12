@@ -36,13 +36,13 @@ server.use(
 server.use(cors());
 server.use(express.json());
 server.use(cookieParser());
-server.use(passport.initialize());
+// server.use(passport.initialize());
 server.use(passport.session());
 
 // Routes
 server.use("/", authRouter.router);
 server.use("/", bookingRouter.router);
-server.use("/", isAuth(), userBooking.router);
+server.use("/", userBooking.router);
 server.use("/", userRouter.router);
 server.use("/", getUserBookingRouter.router);
 
@@ -55,9 +55,10 @@ passport.use(
     done
   ) {
     try {
-      const user = await User.findOne({ email: email }).exec();
+      const user = await User.findOne({ email: email });
+      console.log(email, password);
       if (!user) {
-        return done(null, false, { message: "Sorry, this email doesn't exist!" });
+        return done(null, false, { message: "Incorrect email" });
       }
       crypto.pbkdf2(
         password,
@@ -65,17 +66,16 @@ passport.use(
         310000,
         32,
         "sha256",
-        function (err, hashedPassword) {
+        async function (err, hashedPassword) {
           if (err) {
             return done(err);
           }
           if (!crypto.timingSafeEqual(user.password, hashedPassword)) {
-            return done(null, false, {
-              message: "Incorrect username or password.",
-            });
+            return done(null, false, { message: "Invalid Credentials:" });
           }
           const token = jwt.sign(sanitizer(user), secret);
-          return done(null, {token});
+
+          return done(null, { token });
         }
       );
     } catch (error) {
@@ -83,7 +83,6 @@ passport.use(
     }
   })
 );
-
 
 passport.use(
   "jwt",

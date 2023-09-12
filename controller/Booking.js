@@ -8,18 +8,59 @@ exports.createBookingNo = async (req, res) => {
     return res.status(400).send(error.message);
   }
 };
+// exports.getAllBookingNo = async (req, res) => {
+//   try {
+//     let query = Booking.find();
+
+//     if (req.query._page && req.query._limit) {
+//       const pageSize = parseInt(req.query._limit, 10);
+//       const page = parseInt(req.query._page, 10);
+
+//       query = query
+//         .skip(pageSize * (page - 1))
+//         .limit(pageSize);
+//     }
+
+//     if (req.query._sort && req.query._order) {
+//       const sortField = req.query._sort;
+//       const sortOrder = req.query._order === 'asc' ? 1 : -1;
+//       query = query.sort({ [sortField]: sortOrder });
+//     }
+
+//     const bookings = await query.exec();
+//     const totalBooking = await Booking.countDocuments();
+
+//     res.set("X-TOTAL-Count", totalBooking);
+//     return res.status(200).json(bookings);
+//   } catch (error) {
+//     return res.status(400).send(error.message);
+//   }
+// };
+
+
 exports.getAllBookingNo = async (req, res) => {
   try {
-    let bookings = await Booking.find();
-    const totalBooking = await Booking.countDocuments();
+    let query = Booking.find();
 
     if (req.query._page && req.query._limit) {
       const pageSize = parseInt(req.query._limit, 10);
       const page = parseInt(req.query._page, 10);
-      bookings = await Booking.find()
+
+      query = query
         .skip(pageSize * (page - 1))
         .limit(pageSize);
     }
+
+    const defaultSortField = 'BookingNo'; 
+    const defaultSortOrder = 1;
+
+    const sortField = req.query._sort || defaultSortField;
+    const sortOrder = req.query._order === 'desc' ? -1 : defaultSortOrder;
+
+    query = query.sort({ [sortField]: sortOrder });
+
+    const bookings = await query.exec();
+    const totalBooking = await Booking.countDocuments();
 
     res.set("X-TOTAL-Count", totalBooking);
     return res.status(200).json(bookings);

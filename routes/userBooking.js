@@ -5,8 +5,8 @@ const {
 } = require("../controller/userBooking");
 const router = express.Router();
 router
-  .post("/booking", userBooking)
-  .get("/booking", getuserBookingByid)
+  .post("/api/booking", userBooking)
+  .get("/api/booking", getuserBookingByid)
  
 
 exports.router = router;

@@ -1,12 +1,12 @@
 const express = require("express");
 const {
-  updateuserBookingByid,
+  updateUserBookingById,
   getalluserBooking,
 } = require("../controller/userBooking");
 const router = express.Router();
 router
   
-  .patch("/update/status", updateuserBookingByid)
-  .get("/allbooking", getalluserBooking);
+  .patch("/api/update/status/:id", updateUserBookingById)
+  .get("/api/allbooking", getalluserBooking);
 
 exports.router = router;
