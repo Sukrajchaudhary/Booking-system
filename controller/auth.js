@@ -8,7 +8,9 @@ exports.createUsers = async (req, res) => {
   try {
     const existingUser = await User.findOne({ email: req.body.email });
     if (existingUser) {
-      return res.status(200).json({ message: "User  with these email already exists !" });
+      return res
+        .status(200)
+        .json({ message: "User  with these email already exists !" });
     }
 
     const salt = crypto.randomBytes(16);
@@ -20,7 +22,7 @@ exports.createUsers = async (req, res) => {
       "sha256",
       async function (err, hashedPassword) {
         if (err) {
-          return res.status(200).json({ message: "Password hashing failed" });
+          return res.status(200).json({ message: "Password  failed" });
         }
 
         const user = new User({
@@ -35,8 +37,7 @@ exports.createUsers = async (req, res) => {
             return res.status(400).json(err);
           } else {
             const token = jwt.sign(sanitizer(response), SECRET_KEY);
-           res.status(201)
-              .json({user:sanitizer(user),token:token});
+            res.status(201).json({ user: sanitizer(user), token: token });
           }
         });
       }
@@ -47,9 +48,7 @@ exports.createUsers = async (req, res) => {
 };
 
 exports.loginUser = async (req, res) => {
- res
-  .status(201)
-  .json({token:req.user});
+  res.status(200).json(req.user);
 };
 exports.checkUser = async (req, res) => {
   res.json({ user: req.user });

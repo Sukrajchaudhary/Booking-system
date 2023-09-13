@@ -56,10 +56,11 @@ passport.use(
   ) {
     try {
       const user = await User.findOne({ email: email });
-      console.log(email, password);
-      if (!user) {
-        return done(null, false, { message: "Incorrect email" });
+
+      if (!user || user.email !== email) {
+        return done(null, { message: "Incorrect email" });
       }
+
       crypto.pbkdf2(
         password,
         user.salt,
@@ -71,11 +72,11 @@ passport.use(
             return done(err);
           }
           if (!crypto.timingSafeEqual(user.password, hashedPassword)) {
-            return done(null, false, { message: "Invalid Credentials:" });
+            return done(null, { message: "Invalid Credentials" });
           }
-          const token = jwt.sign(sanitizer(user), secret);
 
-          return done(null, {user:sanitizer(user),token:token});
+          const token = jwt.sign(sanitizer(user), secret);
+          return done(null, { user: sanitizer(user), token: token });
         }
       );
     } catch (error) {
@@ -84,6 +85,7 @@ passport.use(
   })
 );
 
+// jwt strategy
 passport.use(
   "jwt",
   new JwtStrategy(opts, async function (jwt_payload, done) {
