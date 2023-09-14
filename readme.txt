@@ -31,3 +31,27 @@ Admin
   "BookingNo": Number choose by user which number he want
 }
 9.GET /api/booking  //These API is user for getting user booking number in their own user admin pannel
+
+
+
+------------------------
+//for forget password
+------------------------
+1.POST/reset-password-request ;
+{
+  "email:"registred email"
+}
+2.POST/reset-password
+
+  {
+  "email":"sukrajchaudhary90@gmail.com",
+  "token":"Got to you mail inbox and click in link and see in address bar you will see token siply copy and past here for testing in backend only",
+  "password":"Password@1234567890"
+}
+----------------------------------------------------------------------------------------
+Note:use these for getting token and email from url in front-end while sending from front-end
+------------------------------------------------------------
+const query=new URLSearchParams(window.location.search);
+const token=query.get('token');
+const email=query.get('email');
+---------------------------------------
