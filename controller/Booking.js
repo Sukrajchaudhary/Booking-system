@@ -3,9 +3,9 @@ exports.createBookingNo = async (req, res) => {
   try {
     const booking = new Booking(req.body);
     const result = await booking.save();
-    return res.status(201).send(result);
+    return res.status(200).send(result);
   } catch (error) {
-    return res.status(400).send(error.message);
+    return res.status(200).send({ message: "Booking number exists" });
   }
 };
 // exports.getAllBookingNo = async (req, res) => {
@@ -37,7 +37,6 @@ exports.createBookingNo = async (req, res) => {
 //   }
 // };
 
-
 exports.getAllBookingNo = async (req, res) => {
   try {
     let query = Booking.find();
@@ -46,16 +45,14 @@ exports.getAllBookingNo = async (req, res) => {
       const pageSize = parseInt(req.query._limit, 10);
       const page = parseInt(req.query._page, 10);
 
-      query = query
-        .skip(pageSize * (page - 1))
-        .limit(pageSize);
+      query = query.skip(pageSize * (page - 1)).limit(pageSize);
     }
 
-    const defaultSortField = 'BookingNo'; 
+    const defaultSortField = "BookingNo";
     const defaultSortOrder = 1;
 
     const sortField = req.query._sort || defaultSortField;
-    const sortOrder = req.query._order === 'desc' ? -1 : defaultSortOrder;
+    const sortOrder = req.query._order === "desc" ? -1 : defaultSortOrder;
 
     query = query.sort({ [sortField]: sortOrder });
 
@@ -66,5 +63,49 @@ exports.getAllBookingNo = async (req, res) => {
     return res.status(200).json(bookings);
   } catch (error) {
     return res.status(400).send(error.message);
+  }
+};
+
+// exports.updateBookingno = async (req, res) => {
+//   const { bookingIdsToUpdate, newStatus } = req.params;
+
+//   const bookingIdsArray = bookingIdsToUpdate.split(",").map((id) => id.trim());
+
+//   try {
+//     await Booking.updateMany(
+//       { BookingNo: { $in: bookingIdsArray } }, // Find documents with matching IDs
+//       { $set: { status: newStatus } } // Set the new status
+//     )
+//       .then((result) => {
+//         res.status(200).send("Updated successfully");
+//       })
+//       .catch((error) => {
+//         console.error("Error updating booking status:", error);
+//       });
+//   } catch (error) {
+//     return res.status(400).send(error.message);
+//   }
+// };
+
+exports.updateBookingno = async (req, res) => {
+  try {
+    const { ids, status } = req.body;
+
+    // Ensure that ids is an array
+    if (!Array.isArray(ids)) {
+      return res.status(400).json({ error: "ids should be an array" });
+    }
+
+    // Update each document by its ID
+    const updatePromises = ids.map(async (id) => {
+      await Booking.findByIdAndUpdate({ _id: id }, { status: status });
+    });
+
+    // Wait for all updates to complete
+    await Promise.all(updatePromises);
+
+    return res.status(200).json({ success: "Updated Successfully" });
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
   }
 };
