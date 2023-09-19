@@ -2,8 +2,8 @@ const { userBooking } = require("../modals/userBooking");
 exports.userBooking = async (req, res) => {
   try {
     const booking = new userBooking(req.body);
-    const result = await booking.save();
-    return res.status(201).send(result);
+     await booking.save();
+    return res.status(201).send({message:"Your information Added Successsfully!!"});
   } catch (error) {
     return res.status(400).send(error.message);
   }
