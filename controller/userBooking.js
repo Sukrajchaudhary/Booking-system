@@ -1,9 +1,7 @@
 const { userBooking } = require("../modals/userBooking");
 exports.userBooking = async (req, res) => {
   try {
-    const { id } = req.user;
-    console.log(id);
-    const booking = new userBooking({ ...req.body, user: id });
+    const booking = new userBooking(req.body);
     const result = await booking.save();
     return res.status(201).send(result);
   } catch (error) {
@@ -23,11 +21,11 @@ exports.getalluserBooking = async (req, res) => {
         .find()
         .skip(pageSize * (page - 1))
         .limit(pageSize)
-        .populate("user", "PhoneNo username"); 
+      
 
       totaluserbooking = await userBooking.countDocuments();
     } else {
-      booking = await userBooking.find().populate("user", "PhoneNo username"); 
+      booking = await userBooking.find(); 
       totaluserbooking = booking.length; 
     }
 
@@ -41,10 +39,8 @@ exports.getalluserBooking = async (req, res) => {
 
 exports.getuserBookingByid = async (req, res) => {
   try {
-    const { id } = req.user;
     const booking = await userBooking
-      .findOne({ user: id })
-      .populate("user", "PhoneNo username")
+      .findOne()
       .exec();
     if (!booking) {
       return res.status(404).send("Booking not found");

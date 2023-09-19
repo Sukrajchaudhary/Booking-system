@@ -2,7 +2,6 @@ const { User } = require("../modals/auth");
 const crypto = require("crypto");
 const { sanitizer, Mailsend } = require("../services/common");
 const jwt = require("jsonwebtoken");
-const { use } = require("passport");
 const SECRET_KEY = process.env.SECRET_KEY;
 
 exports.createUsers = async (req, res) => {
@@ -38,7 +37,13 @@ exports.createUsers = async (req, res) => {
             return res.status(400).json(err);
           } else {
             const token = jwt.sign(sanitizer(response), SECRET_KEY);
-            res.status(201).json({ user: sanitizer(user), token: token });
+            res
+              .cookie("jwt", token, {
+                expires: new Date(Date.now() + 900000),
+                httpOnly: true,
+              })
+              .status(201)
+              .json({ user: sanitizer(user), token: token });
           }
         });
       }
@@ -52,7 +57,7 @@ exports.loginUser = async (req, res) => {
   res.status(200).json(req.user);
 };
 exports.checkUser = async (req, res) => {
-  res.json({ user: req.user });
+  res.json(req.user);
 };
 
 exports.resetPasswordRequest = async (req, res) => {

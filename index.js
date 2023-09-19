@@ -11,7 +11,6 @@ const ExtractJwt = require("passport-jwt").ExtractJwt;
 const authRouter = require("./routes/auth");
 const LocalStrategy = require("passport-local").Strategy;
 const userBooking = require("./routes/userBooking");
-const userRouter = require("./routes/user");
 const bookingRouter = require("./routes/booking");
 const getUserBookingRouter = require("./routes/getuserBookings");
 const crypto = require("crypto");
@@ -43,7 +42,6 @@ server.use(passport.session());
 server.use("/", authRouter.router);
 server.use("/", bookingRouter.router);
 server.use("/", userBooking.router);
-server.use("/", userRouter.router);
 server.use("/", getUserBookingRouter.router);
 
 // Passport

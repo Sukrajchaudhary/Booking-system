@@ -55,3 +55,21 @@ const query=new URLSearchParams(window.location.search);
 const token=query.get('token');
 const email=query.get('email');
 ---------------------------------------
+
+
+
+
+
+
+
+-----------------
+New update
+---------------
+1.POST /api/booking    //when user click on buynow button and show these form and also payment information.
+{
+  "BookingNo":[12,13,15,16],
+  "name":"suk",
+  "contact":9809521702
+}
+
+2.GET /api/allbooking   // for showing user infromation in admin pannel.

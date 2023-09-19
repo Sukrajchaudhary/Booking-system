@@ -1,15 +1,19 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const userBooking = new Schema({
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-  },
   status: {
     type: String,
     default: "pending",
   },
   BookingNo: { type: [Schema.Types.Mixed], required: true },
+  name: {
+    type: String,
+    require: true
+  },
+  contact: {
+    type: Number,
+    require: true
+  }
 });
 const virtual = userBooking.virtual("id");
 virtual.get(function () {
