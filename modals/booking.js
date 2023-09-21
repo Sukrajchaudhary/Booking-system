@@ -2,10 +2,14 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const bookingSchema = new Schema({
   BookingNo: {
-     type: Number, 
-     required: true, 
-     unique: true
-     },
+    type: Number,
+    required: true,
+    unique: true,
+  },
+  status: {
+    type: String,
+    default: "enabled",
+  },
 });
 const virtual = bookingSchema.virtual("id");
 virtual.get(function () {

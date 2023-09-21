@@ -1,8 +1,13 @@
+const express = require("express");
+const {
+  createBookingNo,
+  getAllBookingNo,
+  updateBookingno,
+} = require("../controller/Booking");
+const router = express.Router();
+router
+  .post("/api/bookingno", createBookingNo)
+  .get("/api/allbookingno", getAllBookingNo)
+  .patch("/api/updatebookingno", updateBookingno);
 
-const express=require('express')
-const {createBookingNo, getAllBookingNo} =require('../controller/Booking')
-const router=express.Router();
-router.post("/api/bookingno",createBookingNo)
-.get("/api/allbookingno",getAllBookingNo)
-
-exports.router=router
+exports.router = router;
