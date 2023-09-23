@@ -25,19 +25,19 @@ exports.cookieExtractor = function(req) {
 const transporter= nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
-  secure: false, // upgrade later with STARTTLS
+  secure: false, 
   auth: {
-    user: 'sukrajchaudhary90@gmail.com',
+    user: 'luckydrawnozza@gmail.com',
     pass: process.env.PASS
   },
 });
 exports.Mailsend=async function({email,subject,text,html}){
   const info = await transporter.sendMail({
-    from: '"Nozza 👻" <nozza@luckydraw.com>', // sender address
-    to: email, // list of receivers
-    subject, // Subject line
-    text, // plain text body
-    html, // html body
+    from: '"Nozza 👻" <luckydrawnozza@gmail.com>', 
+    to: email, 
+    subject, 
+    text, 
+    html, 
   });
   return  ` Reset Mail has been sent successfully to ${info.accepted}`;
 }

@@ -69,7 +69,7 @@ exports.resetPasswordRequest = async (req, res) => {
       user.resetPasswordToken = token;
       await user.save();
       const resetPage =
-        "http://localhost:3000/reset-password?token=" +
+        "http://localhost:5173/reset-password?token=" +
         token +
         "&email=" +
         email;
