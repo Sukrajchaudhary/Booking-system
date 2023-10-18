@@ -101,14 +101,12 @@ passport.use(
 );
 
 passport.serializeUser(function (user, cb) {
-  console.log("serializer", user);
   process.nextTick(function () {
     cb(null, sanitizer(user));
   });
 });
 
 passport.deserializeUser(function (user, cb) {
-  console.log("deserializer ", user);
   process.nextTick(function () {
     cb(null, sanitizer(user));
   });
