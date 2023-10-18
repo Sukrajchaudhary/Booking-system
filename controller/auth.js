@@ -3,6 +3,7 @@ const crypto = require("crypto");
 const { sanitizer, Mailsend } = require("../services/common");
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.SECRET_KEY;
+const HOST = process.env.HOST;
 
 exports.createUsers = async (req, res) => {
   try {
@@ -68,11 +69,8 @@ exports.resetPasswordRequest = async (req, res) => {
       const token = crypto.randomBytes(48).toString("hex");
       user.resetPasswordToken = token;
       await user.save();
-      const resetPage =
-        "http://localhost:5173/reset-password?token=" +
-        token +
-        "&email=" +
-        email;
+      const resetPage = `${HOST}/reset-password?token=${token}&email=${email}`;
+      console.log(resetPage);
       const subject = "Reset Password for Nozza";
       const html = `<p>Click here <a href='${resetPage}' </a> for reset a passsword !`;
       const response = await Mailsend({
